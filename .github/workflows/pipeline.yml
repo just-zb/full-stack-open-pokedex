@@ -38,5 +38,23 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             TAG_PREFIX: 'v'
             DEFAULT_BUMP: patch
+  discord_notification:
+    runs-on: ubuntu-latest
+    needs: simple_deployment_pipeline
+    steps:
+      - name: Test success
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        if: ${{ success() }}
+        with:
+          args: 'The deployment succeeded!'
+      - name: Test failure
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        if: ${{failure()}}
+        with:
+          args: 'Test Failed! https://github.com/${{ github.repository }}/commit/${{ github.sha }} by ${{ github.event.head_commit.author.username }} broke the build'
 
 
