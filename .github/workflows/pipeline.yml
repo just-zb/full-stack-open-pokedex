@@ -38,5 +38,30 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             TAG_PREFIX: 'v'
             DEFAULT_BUMP: patch
+  discord_notification:
+    runs-on: ubuntu-latest
+    needs: simple_deployment_pipeline
+    steps:
+      - name: Test success
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: success()
+        with:
+          severity: info
+          text: The deployment succeeded!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Test failure
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: failure()
+        with:
+          severity: error
+          text: The deployment failed! https://github.com/${{ github.repository }}/commit/${{ github.sha }} by ${{ github.event.head_commit.author.username }} broke the build.
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+      - name: Test cancelled
+        uses: rjstone/discord-webhook-notify@v1.0.4
+        if: cancelled()
+        with:
+          severity: warning
+          text: The deployment was cancelled!
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
 
 
