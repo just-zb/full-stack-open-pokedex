@@ -22,7 +22,7 @@ jobs:
         run: npm run build
       - name: test
         run: npm run test
-      - name: trigger render deploy using render hook
+      - name: trigger render deploy using render hook, only on push to main
         if: ${{ github.event_name == 'push'  && github.ref == 'refs/heads/main' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
 
