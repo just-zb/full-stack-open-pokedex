@@ -4,6 +4,7 @@ on:
         branches: [ main ]
     pull_request:
         branches: [ main ]
+        types: [opened, synchronize]
 
 jobs:
   simple_deployment_pipeline:
@@ -22,5 +23,6 @@ jobs:
       - name: test
         run: npm run test
       - name: trigger render deploy using render hook
+        if: ${{ github.event_name == 'push'  && github.ref == 'refs/heads/main' }}
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
 
