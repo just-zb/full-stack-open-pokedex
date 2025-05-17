@@ -45,14 +45,14 @@ jobs:
       - name: Test success
         uses: Ilshidur/action-discord@master
         env:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         if: ${{ success() }}
         with:
           args: 'The deployment succeeded!'
       - name: Test failure
         uses: Ilshidur/action-discord@master
         env:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         if: ${{failure()}}
         with:
           args: 'Test Failed! https://github.com/${{ github.repository }}/commit/${{ github.sha }} by ${{ github.event.head_commit.author.username }} broke the build'
